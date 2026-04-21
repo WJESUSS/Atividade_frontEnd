@@ -1,0 +1,40 @@
+<div class="page-wrapper">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>UCSAL</h2>
+      <p>Painel Administrativo</p>
+    </div>
+    <nav class="sidebar-nav">
+      <span class="nav-section">Geral</span>
+      <a routerLink="/admin/dashboard" routerLinkActive="active">
+        &#9632; Dashboard
+      </a>
+      <span class="nav-section">Cadastros</span>
+      <a routerLink="/admin/ies" routerLinkActive="active">&#9679; IES</a>
+      <a routerLink="/admin/escolas" routerLinkActive="active">&#9679; Escolas</a>
+      <a routerLink="/admin/professores" routerLinkActive="active">&#9679; Professores</a>
+      <a routerLink="/admin/disciplinas" routerLinkActive="active">&#9679; Disciplinas</a>
+      <a routerLink="/admin/horarios" routerLinkActive="active">&#9679; Horários / Períodos</a>
+      <span class="nav-section">Relatórios</span>
+      <a routerLink="/admin/relatorios" routerLinkActive="active">&#9632; Relatórios</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn btn-secondary" style="width:100%;justify-content:center" (click)="logout()">
+        Sair
+      </button>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <span class="topbar-title">Sistema de Disponibilidade Docente</span>
+      <div class="topbar-user">
+        <div class="avatar">{{ iniciais }}</div>
+        <span>{{ auth.usuario?.nome }}</span>
+      </div>
+    </header>
+    <main class="content-area">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

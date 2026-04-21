@@ -1,0 +1,34 @@
+<div class="login-page">
+  <div class="login-side">
+    <h1>UCSAL</h1>
+    <h3 style="font-size:16px;opacity:.9">Disponibilidade Docente</h3>
+    <p>Sistema de gestão de disponibilidade e interesse em disciplinas dos professores da UCSAL.</p>
+  </div>
+
+  <div class="login-form-side">
+    <div class="login-card">
+      <h2>Entrar</h2>
+      <p class="subtitle">Acesse com suas credenciais institucionais</p>
+
+      <div *ngIf="erro" class="alert alert-danger">{{ erro }}</div>
+
+      <div class="form-group">
+        <label class="form-label">E-mail</label>
+        <input class="form-control" type="email" [(ngModel)]="email"
+               placeholder="seu@email.com" (keyup.enter)="entrar()">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Senha</label>
+        <input class="form-control" type="password" [(ngModel)]="senha"
+               placeholder="••••••••" (keyup.enter)="entrar()">
+      </div>
+
+      <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:.5rem"
+              (click)="entrar()" [disabled]="carregando">
+        <span *ngIf="carregando" class="spinner" style="width:16px;height:16px;border-width:2px"></span>
+        {{ carregando ? 'Entrando...' : 'Entrar' }}
+      </button>
+    </div>
+  </div>
+</div>

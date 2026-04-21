@@ -1,0 +1,77 @@
+<div class="page-header">
+  <h1>Relatórios</h1>
+</div>
+
+<div style="display:flex;gap:8px;margin-bottom:1.25rem">
+  <button class="btn" [class.btn-primary]="aba==='disponibilidade'" [class.btn-secondary]="aba!=='disponibilidade'" (click)="mudarAba('disponibilidade')">Disponibilidade</button>
+  <button class="btn" [class.btn-primary]="aba==='disciplinas'" [class.btn-secondary]="aba!=='disciplinas'" (click)="mudarAba('disciplinas')">Professores × Disciplinas</button>
+  <button class="btn" [class.btn-primary]="aba==='interesse'" [class.btn-secondary]="aba!=='interesse'" (click)="mudarAba('interesse')">Disciplinas × Interesse</button>
+</div>
+
+<div *ngIf="carregando" style="text-align:center;padding:3rem"><div class="spinner" style="margin:0 auto"></div></div>
+
+<!-- ABA: disponibilidade -->
+<ng-container *ngIf="!carregando && aba==='disponibilidade'">
+  <div class="card" *ngFor="let p of disponibilidade" style="margin-bottom:1rem">
+    <div class="card-header">
+      <div>
+        <strong>{{ p.nome }}</strong>
+        <span style="color:var(--text-muted);font-size:12px;margin-left:8px">{{ p.escola }}</span>
+      </div>
+      <span class="badge badge-info">{{ p.disponibilidades.length }} horários</span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      <span *ngFor="let d of p.disponibilidades" class="badge badge-success">
+        {{ labelDia(d.diaSemana) }} {{ d.horaInicio }}–{{ d.horaFim }}
+      </span>
+      <span *ngIf="p.disponibilidades.length === 0" style="color:var(--text-muted);font-size:13px">Sem disponibilidade cadastrada</span>
+    </div>
+  </div>
+  <p *ngIf="disponibilidade.length === 0" style="color:var(--text-muted);text-align:center;padding:2rem">Nenhum dado encontrado.</p>
+</ng-container>
+
+<!-- ABA: disciplinas -->
+<ng-container *ngIf="!carregando && aba==='disciplinas'">
+  <div class="card" *ngFor="let p of disciplinas" style="margin-bottom:1rem">
+    <div class="card-header">
+      <div>
+        <strong>{{ p.professorNome }}</strong>
+        <span style="color:var(--text-muted);font-size:12px;margin-left:8px">{{ p.escolaNome }}</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      <span *ngFor="let d of p.disciplinas" class="badge badge-info">
+        {{ d.disciplinaNome }} <span class="prioridade-chip" style="margin-left:4px">P{{ d.prioridade }}</span>
+      </span>
+      <span *ngIf="p.disciplinas.length === 0" style="color:var(--text-muted);font-size:13px">Sem interesse cadastrado</span>
+    </div>
+  </div>
+  <p *ngIf="disciplinas.length === 0" style="color:var(--text-muted);text-align:center;padding:2rem">Nenhum dado encontrado.</p>
+</ng-container>
+
+<!-- ABA: interesse -->
+<ng-container *ngIf="!carregando && aba==='interesse'">
+  <div class="card" *ngFor="let d of interesse" style="margin-bottom:1rem">
+    <div class="card-header">
+      <strong>{{ d.disciplinaNome }}</strong>
+      <span class="badge badge-purple">{{ d.professores.length }} interessados</span>
+    </div>
+    <div class="table-container">
+      <table>
+        <thead><tr><th>#</th><th>Professor</th><th>Prioridade</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let p of d.professores; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ p.professorNome }}</td>
+            <td>
+              <span class="prioridade-chip" [class.pr-1]="p.prioridade===1" [class.pr-2]="p.prioridade===2" [class.pr-3]="p.prioridade===3">
+                Prioridade {{ p.prioridade }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p *ngIf="interesse.length === 0" style="color:var(--text-muted);text-align:center;padding:2rem">Nenhum dado encontrado.</p>
+</ng-container>

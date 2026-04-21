@@ -1,0 +1,50 @@
+<div class="page-header">
+  <h1>Minha Disponibilidade</h1>
+  <button class="btn btn-primary" (click)="salvar()" [disabled]="salvando || carregando">
+    {{ salvando ? 'Salvando...' : 'Salvar Disponibilidade' }}
+  </button>
+</div>
+
+<div *ngIf="mensagem" class="alert alert-success">{{ mensagem }}</div>
+<div *ngIf="erro" class="alert alert-danger">{{ erro }}</div>
+
+<div class="card" *ngIf="carregando" style="text-align:center;padding:2rem">
+  <div class="spinner" style="margin:0 auto"></div>
+</div>
+
+<ng-container *ngIf="!carregando">
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:13px">
+    Clique nos horarios para marcar sua disponibilidade. Clique novamente para desmarcar.
+  </p>
+
+  <div class="card" *ngFor="let turno of turnos" style="margin-bottom:1rem">
+    <div class="card-header">
+      <span class="card-title">{{ labelTurno[turno] }}</span>
+      <span class="badge badge-info">{{ contarSelecionadosPorTurno(turno) }} selecionados</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:.5rem">
+      <ng-container *ngFor="let dia of dias">
+        <ng-container *ngFor="let c of celulasPorDiaTurno(dia, turno)">
+          <div class="disp-cell" [class.selected]="c.selecionado" (click)="toggle(c)">
+            <div class="dia">{{ labelDia[dia] }}</div>
+            <div class="horario">{{ c.horario.horaInicio }}</div>
+            <div class="horario">{{ c.horario.horaFim }}</div>
+          </div>
+        </ng-container>
+        <div *ngIf="celulasPorDiaTurno(dia, turno).length === 0"
+             style="height:64px;border-radius:6px;background:var(--bg);opacity:.4;border:1px dashed var(--border)"></div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div style="margin-top:1rem;padding:.75rem;background:var(--bg);border-radius:var(--radius);font-size:12px;color:var(--text-muted);display:flex;gap:16px;align-items:center">
+    <span style="display:inline-flex;align-items:center;gap:6px">
+      <span style="width:14px;height:14px;background:var(--primary);border-radius:3px;display:inline-block"></span>
+      Disponivel neste horario
+    </span>
+    <span style="display:inline-flex;align-items:center;gap:6px">
+      <span style="width:14px;height:14px;background:var(--bg);border:1px solid var(--border);border-radius:3px;display:inline-block"></span>
+      Nao disponivel
+    </span>
+  </div>
+</ng-container>

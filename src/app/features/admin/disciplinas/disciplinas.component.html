@@ -1,0 +1,77 @@
+<div class="page-header">
+  <h1>Disciplinas</h1>
+  <button class="btn btn-primary" (click)="abrirModal()">+ Nova Disciplina</button>
+</div>
+
+<div class="card" style="margin-bottom:1rem">
+  <div style="display:flex;gap:1rem;align-items:center">
+    <label class="form-label" style="margin:0">Filtrar por escola:</label>
+    <select class="form-control" style="max-width:260px" [(ngModel)]="filtroEscola">
+      <option [value]="0">Todas as escolas</option>
+      <option *ngFor="let e of escolas" [value]="e.id">{{ e.nome }}</option>
+    </select>
+  </div>
+</div>
+
+<div class="card">
+  <div *ngIf="carregando" style="text-align:center;padding:2rem"><div class="spinner" style="margin:0 auto"></div></div>
+  <div *ngIf="!carregando" class="table-container">
+    <table>
+      <thead>
+        <tr><th>Sigla</th><th>Descrição</th><th>Carga Horária</th><th>Escola</th><th>Status</th><th>Ações</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of listaFiltrada">
+          <td><strong>{{ d.sigla }}</strong></td>
+          <td>{{ d.descricao }}</td>
+          <td>{{ d.cargaHoraria }}h</td>
+          <td>{{ d.nomeEscola }}</td>
+          <td><span class="badge" [class.badge-success]="d.ativo" [class.badge-danger]="!d.ativo">{{ d.ativo ? 'Ativa' : 'Inativa' }}</span></td>
+          <td style="display:flex;gap:6px">
+            <button class="btn btn-secondary btn-sm" (click)="abrirModal(d)">Editar</button>
+            <button class="btn btn-sm" [class.btn-danger]="d.ativo" [class.btn-accent]="!d.ativo" (click)="toggleStatus(d)">{{ d.ativo ? 'Inativar' : 'Ativar' }}</button>
+            <button class="btn btn-danger btn-sm" (click)="excluir(d.id)">Excluir</button>
+          </td>
+        </tr>
+        <tr *ngIf="listaFiltrada.length === 0">
+          <td colspan="6" style="text-align:center;color:var(--text-muted);padding:1.5rem">Nenhuma disciplina encontrada.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="modalAberto" (click)="fecharModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title">{{ editandoId ? 'Editar' : 'Nova' }} Disciplina</span>
+      <button class="btn btn-secondary btn-sm" (click)="fecharModal()">✕</button>
+    </div>
+    <div *ngIf="erro" class="alert alert-danger">{{ erro }}</div>
+    <div class="form-row form-row-2">
+      <div class="form-group">
+        <label class="form-label">Sigla *</label>
+        <input class="form-control" [(ngModel)]="form.sigla" placeholder="Ex: MAT001">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Carga Horária (h) *</label>
+        <input class="form-control" type="number" [(ngModel)]="form.cargaHoraria" min="1">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descrição *</label>
+      <input class="form-control" [(ngModel)]="form.descricao" placeholder="Nome completo da disciplina">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Escola *</label>
+      <select class="form-control" [(ngModel)]="form.escolaId">
+        <option [value]="0" disabled>Selecione...</option>
+        <option *ngFor="let e of escolas" [value]="e.id">{{ e.nome }}</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="fecharModal()">Cancelar</button>
+      <button class="btn btn-primary" (click)="salvar()" [disabled]="salvando">{{ salvando ? 'Salvando...' : 'Salvar' }}</button>
+    </div>
+  </div>
+</div>

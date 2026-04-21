@@ -1,0 +1,87 @@
+<div class="page-header">
+  <h1>Professores</h1>
+  <button class="btn btn-primary" (click)="abrirModal()">+ Novo Professor</button>
+</div>
+
+<div class="card">
+  <div *ngIf="carregando" style="text-align:center;padding:2rem"><div class="spinner" style="margin:0 auto"></div></div>
+
+  <div *ngIf="!carregando" class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Matrícula</th><th>Nome</th><th>E-mail</th><th>Escola</th><th>Status</th><th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of lista">
+          <td>{{ p.matricula }}</td>
+          <td>{{ p.nomeCompleto }}</td>
+          <td>{{ p.email }}</td>
+          <td>{{ p.escolaNome }}</td>
+          <td>
+            <span class="badge" [class.badge-success]="p.ativo" [class.badge-danger]="!p.ativo">
+              {{ p.ativo ? 'Ativo' : 'Inativo' }}
+            </span>
+          </td>
+          <td style="display:flex;gap:6px">
+            <button class="btn btn-secondary btn-sm" (click)="abrirModal(p)">Editar</button>
+            <button class="btn btn-sm" [class.btn-danger]="p.ativo" [class.btn-accent]="!p.ativo" (click)="toggleStatus(p)">
+              {{ p.ativo ? 'Inativar' : 'Ativar' }}
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="lista.length === 0">
+          <td colspan="6" style="text-align:center;color:var(--text-muted);padding:1.5rem">Nenhum professor cadastrado.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="modalAberto" (click)="fecharModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title">{{ editandoId ? 'Editar' : 'Novo' }} Professor</span>
+      <button class="btn btn-secondary btn-sm" (click)="fecharModal()">✕</button>
+    </div>
+
+    <div *ngIf="erro" class="alert alert-danger">{{ erro }}</div>
+
+    <div class="form-row form-row-2">
+      <div class="form-group">
+        <label class="form-label">Matrícula *</label>
+        <input class="form-control" [(ngModel)]="form.matricula" placeholder="Ex: 20240001">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nome completo *</label>
+        <input class="form-control" [(ngModel)]="form.nomeCompleto">
+      </div>
+    </div>
+    <div class="form-row form-row-2">
+      <div class="form-group">
+        <label class="form-label">E-mail *</label>
+        <input class="form-control" type="email" [(ngModel)]="form.email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Telefone</label>
+        <input class="form-control" [(ngModel)]="form.telefone" placeholder="(71) 9xxxx-xxxx">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Escola *</label>
+      <select class="form-control" [(ngModel)]="form.escolaId">
+        <option [value]="0" disabled>Selecione...</option>
+        <option *ngFor="let e of escolas" [value]="e.id">{{ e.nome }}</option>
+      </select>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="fecharModal()">Cancelar</button>
+      <button class="btn btn-primary" (click)="salvar()" [disabled]="salvando">
+        {{ salvando ? 'Salvando...' : 'Salvar' }}
+      </button>
+    </div>
+  </div>
+</div>
