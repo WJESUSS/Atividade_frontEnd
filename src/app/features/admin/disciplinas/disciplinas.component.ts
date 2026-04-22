@@ -35,16 +35,34 @@ export class DisciplinasComponent implements OnInit {
   }
 
   get listaFiltrada() {
-    return this.filtroEscola ? this.lista.filter(d => d.escolaId === this.filtroEscola) : this.lista;
-  }
+    const id = Number(this.filtroEscola);
 
+    return id
+        ? this.lista.filter(d => d.escolaId === id)
+        : this.lista;
+  }
   abrirModal(d?: DisciplinaResponse) {
     this.erro = '';
-    this.editandoId = d ? d.id : null;
-    this.form = d
-      ? { sigla: d.sigla, descricao: d.descricao, cargaHoraria: d.cargaHoraria, escolaId: d.escolaId }
-      : { sigla: '', descricao: '', cargaHoraria: 60, escolaId: 0 };
     this.modalAberto = true;
+
+    if (d?.id) {
+      this.editandoId = d.id;
+
+      this.svc.buscar(d.id).subscribe({
+        next: (data) => {
+          this.form = {
+            sigla: data.sigla,
+            descricao: data.descricao,
+            cargaHoraria: data.cargaHoraria,
+            escolaId: data.escolaId
+          };
+        }
+      });
+
+    } else {
+      this.editandoId = null;
+      this.form = { sigla: '', descricao: '', cargaHoraria: 60, escolaId: 0 };
+    }
   }
 
   fecharModal() { this.modalAberto = false; }
