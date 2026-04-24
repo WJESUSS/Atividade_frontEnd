@@ -221,9 +221,12 @@ export default class HorariosComponent implements OnInit {
         this.fecharModal();
         this.carregar();
       },
-      error: () => {
+      error: (err) => {
         this.salvando = false;
-        this.erro = 'Erro ao salvar.';
+        let mensagem = 'Erro ao salvar.';
+        if (err?.error?.message) mensagem = err.error.message;
+        else if (typeof err?.error === 'string') mensagem = err.error;
+        this.erro = mensagem;
       }
     });
   }

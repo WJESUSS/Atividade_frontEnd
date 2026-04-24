@@ -85,7 +85,10 @@ export class DisciplinasComponent implements OnInit {
       },
       error: (err) => {
         this.salvando = false;
-        this.erro = err?.error?.erro || 'Erro ao salvar.'; // ✅ exibe mensagem do backend
+        let mensagem = 'Erro ao salvar.';
+        if (err?.error?.message) mensagem = err.error.message;
+        else if (typeof err?.error === 'string') mensagem = err.error;
+        this.erro = mensagem;
       }
     });
   }

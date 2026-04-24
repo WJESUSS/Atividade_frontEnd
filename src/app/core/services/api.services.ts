@@ -51,6 +51,10 @@ export class ProfessorService {
   alterarStatus(id: number, ativo: boolean) {
     return this.http.patch(`${API}/api/admin/professores/${id}/status`, null, { params: new HttpParams().set('ativo', ativo) });
   }
+
+  excluir(id: number) {
+    return this.http.delete(`${API}/api/admin/professores/${id}`);
+  }
 }
 
 // ---- DISCIPLINA ----

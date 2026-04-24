@@ -94,4 +94,32 @@ export class ProfessoresComponent implements OnInit {
   private formVazio(): ProfessorRequest {
     return { matricula: '', nomeCompleto: '', email: '', telefone: '', escolaId: 0 };
   }
+  excluir(p: ProfessorResponse) {
+
+    const confirmar = confirm(`Deseja realmente excluir o professor ${p.nomeCompleto}?`);
+
+    if (!confirmar) return;
+
+    this.svc.excluir(p.id).subscribe({
+      next: () => {
+        this.carregar();
+      },
+      error: (err) => {
+
+        let mensagem = 'Erro ao excluir professor.';
+
+        if (err?.error) {
+          if (typeof err.error === 'string') {
+            mensagem = err.error;
+          } else if (err.error.message) {
+            mensagem = err.error.message;
+          } else if (err.error.erro) {
+            mensagem = err.error.erro;
+          }
+        }
+
+        alert(mensagem); // pode trocar por toast depois
+      }
+    });
+  }
 }

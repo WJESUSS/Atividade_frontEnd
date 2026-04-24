@@ -100,10 +100,26 @@ export class EscolasComponent implements OnInit {
   fecharModal() { this.modalAberto = false; }
 
   salvar() {
-    if (!this.form.nome || !this.form.nomeCoordenador || !this.form.iesId) { this.erro = 'Preencha todos os campos.'; return; }
+    if (!this.form.nome || !this.form.nomeCoordenador || !this.form.iesId) {
+      this.erro = 'Preencha todos os campos.';
+      return;
+    }
     this.salvando = true;
-    const op = this.editandoId ? this.svc.atualizar(this.editandoId, this.form) : this.svc.criar(this.form);
-    op.subscribe({ next: () => { this.salvando = false; this.fecharModal(); this.carregar(); }, error: () => { this.salvando = false; this.erro = 'Erro ao salvar.'; } });
+    const op = this.editandoId
+        ? this.svc.atualizar(this.editandoId, this.form)
+        : this.svc.criar(this.form);
+
+    op.subscribe({
+      next: () => {
+        this.salvando = false;
+        this.fecharModal();
+        this.carregar();
+      },
+      error: (err) => {
+        this.salvando = false;
+        this.erro = err?.error?.message || 'Erro ao salvar. Tente novamente.';
+      }
+    });
   }
 
   toggleStatus(e: EscolaResponse) { this.svc.alterarStatus(e.id, !e.ativo).subscribe(() => this.carregar()); }
